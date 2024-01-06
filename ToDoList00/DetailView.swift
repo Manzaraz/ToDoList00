@@ -9,41 +9,41 @@ import SwiftUI
 
 struct DetailView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var toDo = ""
-    @State private var reminderIsOn = false
-    @State private var dueDate = Date.now + (60*60*24)
-    @State private var notes = ""
-    @State private var isCompleted = false
+    @EnvironmentObject var toDosVM: ToDosViewModel
+    @State var toDo: ToDo
     
-    var passedValue: String
+    var newToDo = false
     
     var body: some View {
         
         List {
-            Group {
-                TextField("Enter To Do here.", text: $toDo)
-                    .font(.title)
-                    .textFieldStyle(.roundedBorder)
-                    .padding(.vertical)
-                
-                Toggle("Set Reminder:", isOn: $reminderIsOn)
-                    .padding(.top)
-                
-                DatePicker("Date:", selection: $dueDate)
-                    .padding(.bottom)
-                    .disabled(!reminderIsOn)
-                
-                Text("Notes:")
-                    .padding(.top)
-                
-                TextField("Notes...", text: $notes, axis: .vertical)
-                    .textFieldStyle(.roundedBorder)
-                
-                Toggle("Completed", isOn: $isCompleted)
-                    .padding(.top)
-            }
-            .listRowSeparator(.hidden)
+            TextField("Enter To Do here...", text: $toDo.item)
+                .font(.title)
+                .textFieldStyle(.roundedBorder)
+                .padding(.vertical)
+                .listRowSeparator(.hidden)
+            
+            Toggle("Set Reminder:", isOn: $toDo.reminderIsOn)
+                .listRowSeparator(.hidden)
+                .padding(.top)
+            
+            DatePicker("Date:", selection: $toDo.dueDate)
+                .listRowSeparator(.hidden)
+                .padding(.bottom)
+                .disabled(!toDo.reminderIsOn)
+            
+            Text("Notes:")
+                .listRowSeparator(.hidden)
+                .padding(.top)
+            
+            TextField("Notes...", text: $toDo.notes, axis: .vertical)
+                .listRowSeparator(.hidden)
+                .textFieldStyle(.roundedBorder)
+            
+            Toggle("Completed", isOn: $toDo.isCompleted)
+                .padding(.top)
         }
+        
         .listStyle(.plain)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -53,7 +53,11 @@ struct DetailView: View {
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Save") {
-                    //TODO: Add Save code here
+                    //MARK:  if new, append to toDosVm.toDo else update the toDo that was passed in from the List
+                    if newToDo {
+                        toDosVM.toDos.append(toDo)
+                        dismiss()
+                    }
                 }
             }
         }
@@ -64,7 +68,8 @@ struct DetailView: View {
 
 #Preview {
     NavigationStack {
-        DetailView(passedValue: "Item 1")
+        DetailView(toDo: ToDo())
+            .environmentObject(ToDosViewModel())
     }
 }
 
