@@ -32,15 +32,13 @@ struct ToDoListView: View {
                     } label: {
                         Image(systemName: "plus")
                     }
-
-                    
                 }
             }
             .sheet(isPresented: $sheetIsPressented) {
-                DetailView(passedValue: "")
-            }
-
-         
+                NavigationStack {
+                    DetailView(passedValue: "")                   
+                }
+            }        
         }
     }
 }

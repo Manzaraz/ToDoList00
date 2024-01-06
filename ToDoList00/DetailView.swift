@@ -18,56 +18,53 @@ struct DetailView: View {
     var passedValue: String
     
     var body: some View {
-        NavigationStack {
-            List {
-                Group {
-                    TextField("Enter To Do here.", text: $toDo)
-                        .font(.title)
-                        .textFieldStyle(.roundedBorder)
-                        .padding(.vertical)
         
-                    Toggle("Set Reminder:", isOn: $reminderIsOn)
-                        .padding(.top)
-                    
-                    DatePicker("Date:", selection: $dueDate)
-                        .padding(.bottom)
-                        .disabled(!reminderIsOn)
-                    
-                    Text("Notes:")
-                        .padding(.top)
-                    
-                    TextField("Notes...", text: $notes, axis: .vertical)
-                        .textFieldStyle(.roundedBorder)
-
-                    Toggle("Completed", isOn: $isCompleted)
-                        .padding(.top)
-
-                }
-                .listRowSeparator(.hidden)
-            }
-            .listStyle(.plain)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Save") {
-                        //TODO: Add Save code here
-                    }
-                }
+        List {
+            Group {
+                TextField("Enter To Do here.", text: $toDo)
+                    .font(.title)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(.vertical)
                 
+                Toggle("Set Reminder:", isOn: $reminderIsOn)
+                    .padding(.top)
+                
+                DatePicker("Date:", selection: $dueDate)
+                    .padding(.bottom)
+                    .disabled(!reminderIsOn)
+                
+                Text("Notes:")
+                    .padding(.top)
+                
+                TextField("Notes...", text: $notes, axis: .vertical)
+                    .textFieldStyle(.roundedBorder)
+                
+                Toggle("Completed", isOn: $isCompleted)
+                    .padding(.top)
             }
-            .navigationBarBackButtonHidden()
-            .navigationBarTitleDisplayMode(.inline)
+            .listRowSeparator(.hidden)
         }
-        .navigationTitle(passedValue)
-        
+        .listStyle(.plain)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button("Cancel") {
+                    dismiss()
+                }
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Save") {
+                    //TODO: Add Save code here
+                }
+            }
+        }
+        .navigationBarBackButtonHidden()
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 #Preview {
-    DetailView(passedValue: "Item 1")
+    NavigationStack {
+        DetailView(passedValue: "Item 1")
+    }
 }
 
