@@ -6,15 +6,16 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct ToDoList00App: App {
-    @StateObject var toDosVM = ToDosViewModel()
+    
     
     var body: some Scene {
         WindowGroup {
             ToDoListView()
-                .environmentObject(toDosVM)
+                .modelContainer(for: ToDo.self) //MARK: Fijate si va aquí o lo cargo al ToDoListView()
         }
     }
 }

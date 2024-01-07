@@ -5,22 +5,28 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ToDoListView: View {
     @State private var sheetIsPressented = false
-    @EnvironmentObject var toDosVM: ToDosViewModel
+    @Query var toDos: [ToDo]
+    @Environment(\.modelContext) var modelContext
 
     var body: some View {
         NavigationStack {
             List {
-                if toDosVM.toDos.count == 0 {
-                  Text("There is nothing \"To Do\".")
+                if toDos.count == 0 {
+                  Text("Everything is OK, here is nothing \"To Do\". Just Relax 😎")
+                        .multilineTextAlignment(.center)
+                        .font(.headline)
+                        .padding(/*@START_MENU_TOKEN@*/EdgeInsets()/*@END_MENU_TOKEN@*/)
+                        .foregroundStyle(.indigo)
                 } else {
-                    ForEach(toDosVM.toDos) { toDo in
+                    ForEach(toDos) { toDo in
                         HStack {
                             Image(systemName: toDo.isCompleted ?  "checkmark.circle.fill" : "circle")
                                 .onTapGesture {
-                                    toDosVM.toggleCompleted(toDo: toDo)
+                                    toDo.isCompleted.toggle()
                                 }
                                 .foregroundStyle(toDo.isCompleted ? Color.green : Color.gray)
                             
@@ -29,33 +35,20 @@ struct ToDoListView: View {
                             } label: {
                                 Text(toDo.item)
                             }
-                            .font(.title2)
+                        }
+                        .font(.title2)
+                        .swipeActions {
+                            Button("Delete", role: .destructive) {
+                                modelContext.delete(toDo)
+                            }
                         }
                     }
-                    // Shorthand calls to .onDelete and onMove here.
-                    .onDelete(perform: toDosVM.deleteToDo)
-                    .onMove(perform: toDosVM.moveToDo)
-                    //                .onDelete(perform: toDosVM.delete(indexSet:))
-                    //                .onMove(perform: toDosVM.move(indices:newOffset:))
-                    
-                    //Traditional calls are bellow
-                    //                .onDelete { indexSet in
-                    //                    toDosVM.delete(indexSet: indexSet)
-                    //                }
-                    //                .onMove { indices, newOffset in
-                    //                    toDosVM.move(indices: indices, newOffset: newOffset)
-                    //                }
-                    
                 }
             }
             .navigationTitle("To Do List")
             .navigationBarTitleDisplayMode(.automatic)
             .listStyle(.plain)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    EditButton()
-                }
-                
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         sheetIsPressented.toggle()
@@ -76,6 +69,6 @@ struct ToDoListView: View {
 
 #Preview {
     ToDoListView()
-        .environmentObject(ToDosViewModel())
+        
 }
 
