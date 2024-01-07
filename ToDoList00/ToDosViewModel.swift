@@ -39,6 +39,15 @@ class ToDosViewModel: ObservableObject {
         saveData()
     }
     
+    func toggleCompleted(toDo: ToDo) {
+        guard toDo.id != nil else { return }
+        let newToDo = toDo
+        if let  index = toDos.firstIndex(where: {$0.id == newToDo.id}) {
+            toDos[index].isCompleted.toggle()
+        }
+        saveData()
+    }
+    
     func saveData() {
         let path = URL.documentsDirectory.appending(component: "toDos")
         let data = try? JSONEncoder().encode(toDos) // try? means if error is thrown, data = nil
