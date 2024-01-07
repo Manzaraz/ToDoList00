@@ -21,11 +21,27 @@ struct ToDoListView: View {
                     }
                     .font(.title2)
                 }
+                .onDelete(perform: toDosVM.delete)
+                .onMove(perform: toDosVM.move)
+//                .onDelete(perform: toDosVM.delete(indexSet:))
+//                .onMove(perform: toDosVM.move(indices:newOffset:))
+                
+                //Traditional calls are bellow
+//                .onDelete { indexSet in
+//                    toDosVM.delete(indexSet: indexSet)
+//                }
+//                .onMove { indices, newOffset in
+//                    toDosVM.move(indices: indices, newOffset: newOffset)
+//                }
             }
             .navigationTitle("To Do List")
             .navigationBarTitleDisplayMode(.automatic)
             .listStyle(.plain)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    EditButton()
+                }
+                
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         sheetIsPressented.toggle()
